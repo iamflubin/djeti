@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:17.5
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: djeti_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - djeti-network
+
+  adminer:
+    image: adminer:5.3.0
+    ports:
+      - '8081:8080'
+    networks:
+      - djeti-network
+
+networks:
+  djeti-network:
+    driver: bridge
+
+volumes:
+  db:
