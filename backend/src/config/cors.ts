@@ -1,6 +1,6 @@
 // src/config/cors.ts
 import cors from 'cors';
-import { env } from './env.config'; // if using zod-validated envs
+import { env } from './env'; // if using zod-validated envs
 
 const allowedOrigins = env.CORS_ORIGINS?.split(',') || [];
 

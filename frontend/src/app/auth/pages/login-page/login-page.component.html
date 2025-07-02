@@ -1,0 +1,37 @@
+<app-auth-form
+  title="Welcome Back!"
+  [redirectInfo]="{
+    url: '/auth/register',
+    text: 'Don\'t have an account?',
+    label: 'Sign up',
+  }">
+  <form [formGroup]="form" (ngSubmit)="onLogin()" class="flex flex-col gap-2">
+    <label hlmLabel>
+      Email
+      <input
+        class="w-full"
+        hlmInput
+        type="email"
+        formControlName="email"
+        placeholder="you@example.com" />
+      @if (f.email.errors?.['required']) {
+        <span class="text-xs text-destructive">Email is required</span>
+      }
+      @if (f.email.errors?.['email']) {
+        <span class="text-xs text-destructive">Invalid email</span>
+      }
+    </label>
+    <label hlmLabel>
+      Password
+      <input
+        class="w-full"
+        hlmInput
+        type="password"
+        formControlName="password" />
+      @if (f.password.errors?.['required']) {
+        <span class="text-xs text-destructive">Password is required</span>
+      }
+    </label>
+    <button hlmBtn class="mt-4" [disabled]="loading()">Log in</button>
+  </form>
+</app-auth-form>

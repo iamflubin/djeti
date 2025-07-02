@@ -1,5 +1,5 @@
-import { env } from '@/config/env.config';
-import { logger } from '@/utils/logger.utils';
+import { env } from '@/config/env';
+import { logger } from '@/utils/logger';
 import app from './app';
 
 app.listen(env.PORT, () => {

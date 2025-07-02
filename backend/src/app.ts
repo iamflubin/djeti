@@ -1,12 +1,14 @@
 import { errorHandler } from '@/middlewares/error.middleware';
-import { stream } from '@/utils/logger.utils';
+import { stream } from '@/utils/logger';
 import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import { corsOptions } from './config/cors.config';
+import { corsOptions } from './config/cors';
+import routes from './routes';
+
 const app = express();
 
 app.use(helmet());
@@ -21,7 +23,7 @@ app.use(
     max: 100,
   })
 );
-//app.use('/api/v1', routes);
+app.use('/api', routes);
 app.use(errorHandler);
 
 export default app;

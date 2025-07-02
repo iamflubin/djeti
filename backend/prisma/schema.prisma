@@ -7,3 +7,27 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model AppUser {
+  id            String         @id @default(uuid())
+  fullName      String         @map("full_name")
+  email         String         @unique
+  password      String
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@map("app_user")
+}
+
+model RefreshToken {
+  token     String   @id @default(uuid())
+  revoked   Boolean  @default(false)
+  expiresAt DateTime @map("expires_at")
+  user      AppUser  @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("refresh_token")
+}
