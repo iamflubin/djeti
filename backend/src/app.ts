@@ -1,6 +1,7 @@
 import { errorHandler } from '@/middlewares/error.middleware';
 import { stream } from '@/utils/logger';
 import compression from 'compression';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
@@ -15,6 +16,7 @@ app.use(helmet());
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(compression());
 app.use(morgan('combined', { stream }));
 app.use(

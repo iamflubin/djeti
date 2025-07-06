@@ -1,5 +1,9 @@
 export interface LoginResponse {
   accessToken: string;
-  tokenType: string;
-  expiresIn: number;
+}
+
+export interface User {
+  userId: string;
+  email: string;
+  fullName: string;
 }

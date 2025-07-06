@@ -12,9 +12,9 @@ const generateTokenPair = async (user: AppUser): Promise<LoginResponse> => {
   const accessToken = signToken(
     {
       sub: user.id,
-      userId: user.id,
-      fullName: user.fullName,
+      id: user.id,
       email: user.email,
+      fullName: user.fullName,
     },
     { expiresIn: env.JWT_EXPIRES_IN_S }
   );

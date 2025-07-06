@@ -1,15 +1,9 @@
 import { env } from '@/config/env';
-import jwt, { SignOptions } from 'jsonwebtoken';
-
-export interface JwtPayload extends jwt.JwtPayload {
-  email: string;
-  fullName: string;
-  userId: string;
-}
+import jwt, { JwtPayload, SignOptions } from 'jsonwebtoken';
 
 export const signToken = (
   payload: JwtPayload,
-  options: SignOptions = { expiresIn: '15m' }
+  options: SignOptions
 ): string => {
   return jwt.sign(payload, env.JWT_SECRET, options);
 };

@@ -1,18 +1,30 @@
 import {
   ApplicationConfig,
+  inject,
+  provideAppInitializer,
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
+import { catchError, firstValueFrom, of } from 'rxjs';
 import { routes } from './app.routes';
+import { AuthService } from './auth/services/auth.service';
+import { authInterceptor } from './core/interceptor/auth.interceptor';
+
+const refreshUser = (authService: AuthService) => {
+  return firstValueFrom(
+    authService.refreshToken().pipe(catchError(() => of(null)))
+  );
+};
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(),
+    provideAppInitializer(() => refreshUser(inject(AuthService))),
+    provideHttpClient(withInterceptors([authInterceptor])),
   ],
 };
