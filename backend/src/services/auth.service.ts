@@ -8,6 +8,14 @@ import { AppUser } from '@prisma/client';
 
 const fakeHash = '$2a$10$A3zWV6X542wcgAnf/YkL8urDwnhoo8I.//lVX1gpNJYWMWSBFb2De';
 
+export const deleteExpiredAndRevokedRefreshTokens = async () => {
+  return prisma.refreshToken.deleteMany({
+    where: {
+      OR: [{ revoked: true }, { expiresAt: { lt: new Date() } }],
+    },
+  });
+};
+
 const generateTokenPair = async (user: AppUser): Promise<LoginResponse> => {
   const accessToken = signToken(
     {
