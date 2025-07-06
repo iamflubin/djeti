@@ -8,14 +8,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TransactionType {
+  INCOME
+  EXPENSE
+}
+
+enum ExpenseCategory {
+  NEEDS
+  WANTS
+  SAVINGS
+}
+
 model AppUser {
   id            String         @id @default(uuid())
   fullName      String         @map("full_name")
   email         String         @unique
   password      String
-  refreshTokens RefreshToken[]
   createdAt     DateTime       @default(now()) @map("created_at")
   updatedAt     DateTime       @updatedAt @map("updated_at")
+  refreshTokens RefreshToken[]
+  transactions  Transaction[]
 
   @@map("app_user")
 }
@@ -30,4 +42,22 @@ model RefreshToken {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("refresh_token")
+}
+
+model Transaction {
+  id          String           @id @default(uuid())
+  title       String
+  amount      Decimal          @db.Decimal(10, 2)
+  type        TransactionType
+  date        DateTime         @db.Date
+  description String?
+  category    ExpenseCategory?
+  user        AppUser          @relation(fields: [userId], references: [id])
+  userId      String
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  @@index([userId, date])
+  @@index([userId, type, date, category])
+  @@map("transaction")
 }
