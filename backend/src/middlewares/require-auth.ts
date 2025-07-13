@@ -18,7 +18,7 @@ export const requireAuth = (
   try {
     const payload = verifyToken(token);
     req.user = {
-      userId: payload.userId,
+      id: payload.id,
       email: payload.email,
     };
     next();
