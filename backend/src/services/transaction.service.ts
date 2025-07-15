@@ -27,6 +27,8 @@ export const createTransaction = async (
   transaction: TransactionRequest,
   userId: string
 ): Promise<string> => {
+  await new Promise(res => setTimeout(res, 20000));
+
   if (transaction.type === 'EXPENSE' && !transaction.category) {
     throw new AppError('Category is required for expense transactions', 400);
   }

@@ -1,0 +1,8 @@
+<hlm-dialog-header>
+  <h3 hlmDialogTitle>{{ title }}</h3>
+</hlm-dialog-header>
+<app-transaction-form
+  [type]="type"
+  [mode]="mode"
+  [loading]="loading()"
+  (transactionCreated)="onTransactionCreated($event)" />

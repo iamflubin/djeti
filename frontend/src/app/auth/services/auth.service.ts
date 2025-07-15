@@ -29,7 +29,7 @@ export class AuthService {
   }): Observable<LoginResponse> {
     this._loading.set(true);
     return this.http
-      .post<LoginResponse>(`${environment.baseApiUrl}/v1/auth/login`, payload, {
+      .post<LoginResponse>(`${environment.apiBaseUrl}/v1/auth/login`, payload, {
         context: new HttpContext().set(SKIP_AUTH, true),
       })
       .pipe(
@@ -45,7 +45,7 @@ export class AuthService {
   }): Observable<void> {
     this._loading.set(true);
     return this.http
-      .post<void>(`${environment.baseApiUrl}/v1/auth/register`, payload, {
+      .post<void>(`${environment.apiBaseUrl}/v1/auth/register`, payload, {
         context: new HttpContext().set(SKIP_AUTH, true),
       })
       .pipe(finalize(() => this._loading.set(false)));
@@ -54,7 +54,7 @@ export class AuthService {
   refreshToken() {
     return this.http
       .post<LoginResponse>(
-        `${environment.baseApiUrl}/v1/auth/refresh`,
+        `${environment.apiBaseUrl}/v1/auth/refresh`,
         {},
         {
           context: new HttpContext().set(SKIP_AUTH, true),
@@ -67,7 +67,7 @@ export class AuthService {
   logout() {
     this.setUser('');
     return this.http.post<void>(
-      `${environment.baseApiUrl}/v1/auth/logout`,
+      `${environment.apiBaseUrl}/v1/auth/logout`,
       {},
       {
         context: new HttpContext().set(SKIP_AUTH, true),

@@ -21,6 +21,13 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES),
       },
+      {
+        path: 'transactions',
+        loadChildren: () =>
+          import('./transaction/transaction.routes').then(
+            m => m.TRANSACTION_ROUTES
+          ),
+      },
     ],
   },
 ];
