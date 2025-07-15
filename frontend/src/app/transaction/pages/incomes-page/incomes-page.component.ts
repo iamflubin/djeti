@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { TransactionListComponent } from '../../components/transaction-list/transaction-list.component';
+import { TransactionListContainerComponent } from '../../components/transaction-list-container/transaction-list-container.component';
 
 @Component({
   selector: 'app-incomes-page',
-  imports: [TransactionListComponent],
+  imports: [TransactionListContainerComponent],
   templateUrl: './incomes-page.component.html',
   styleUrl: './incomes-page.component.scss',
 })

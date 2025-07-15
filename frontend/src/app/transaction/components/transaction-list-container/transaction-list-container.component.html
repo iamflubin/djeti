@@ -1,0 +1,11 @@
+<div>
+  <button hlmBtn (click)="onOpenCreationDialog()">{{ buttonLabel() }}</button>
+  <app-transaction-table
+    [transactions]="transactions()"
+    [totalPages]="totalPages()"
+    [type]="type()"
+    (delete)="onOpenDeleteConfirmDialog($event)"
+    (viewDetails)="onOpenViewDialog($event)"
+    [(rowSelection)]="rowSelection"
+    [(pagination)]="pagination" />
+</div>

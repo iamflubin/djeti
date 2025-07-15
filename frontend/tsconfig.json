@@ -45,6 +45,18 @@
       ],
       "@spartan-ng/helm/radio-group": [
         "./libs/ui/ui-radio-group-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/table": [
+        "./libs/ui/ui-table-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/checkbox": [
+        "./libs/ui/ui-checkbox-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/menu": [
+        "./libs/ui/ui-menu-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/alert-dialog": [
+        "./libs/ui/ui-alert-dialog-helm/src/index.ts"
       ]
     }
   },

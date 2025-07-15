@@ -1,0 +1,12 @@
+<button [brnMenuTriggerFor]="menu" hlmBtn variant="ghost">
+  <ng-icon hlm size="sm" name="lucideEllipsis" />
+</button>
+
+<ng-template #menu>
+  <hlm-menu>
+    <hlm-menu-group>
+      <button hlmMenuItem (click)="onViewDetails()">View Details</button>
+      <button hlmMenuItem (click)="onDelete()">Delete</button>
+    </hlm-menu-group>
+  </hlm-menu>
+</ng-template>

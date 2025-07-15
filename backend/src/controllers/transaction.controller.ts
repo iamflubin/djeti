@@ -1,6 +1,10 @@
 import { AppError } from '@/errors/app-error.error';
 import * as transactionService from '@/services/transaction.service';
-import { CREATE_TRANSACTION_SCHEMA, TRANSACTION_QUERY_SCHEMA } from '@/types';
+import {
+  CREATE_TRANSACTION_SCHEMA,
+  TRANSACTION_QUERY_SCHEMA,
+  UPDATE_TRANSACTION_SCHEMA,
+} from '@/types';
 import { Request, Response } from 'express';
 
 export const createTransaction = async (req: Request, res: Response) => {
@@ -92,10 +96,16 @@ export const updateTransaction = async (req: Request, res: Response) => {
     throw new AppError('Unauthorized', 401);
   }
 
+  const validation = UPDATE_TRANSACTION_SCHEMA.safeParse(req.body);
+
+  if (!validation.success) {
+    throw new AppError('Validation failed', 400, validation.error.errors);
+  }
+
   await transactionService.updateTransaction(
     transactionId,
     req.user.id,
-    req.body
+    validation.data
   );
 
   res.sendStatus(204);

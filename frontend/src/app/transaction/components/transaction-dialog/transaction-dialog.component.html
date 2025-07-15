@@ -1,8 +1,22 @@
 <hlm-dialog-header>
   <h3 hlmDialogTitle>{{ title }}</h3>
+  @if (isReadonly()) {
+    <button
+      hlmBtn
+      size="sm"
+      (click)="onMakeEditable()"
+      variant="link"
+      class="mt-2 self-start p-0">
+      Edit
+    </button>
+  }
 </hlm-dialog-header>
+
 <app-transaction-form
   [type]="type"
   [mode]="mode"
+  [readOnly]="isReadonly()"
+  [transaction]="transaction"
   [loading]="loading()"
-  (transactionCreated)="onTransactionCreated($event)" />
+  (canceled)="onCanceled()"
+  (submitted)="onSubmitted($event)" />

@@ -1,6 +1,7 @@
 import {
   Component,
   computed,
+  effect,
   inject,
   input,
   OnDestroy,
@@ -27,6 +28,7 @@ import { Subject, takeUntil } from 'rxjs';
 import {
   CreateTransactionRequest,
   ExpenseCategory,
+  TransactionResponse,
   TransactionType,
 } from '../../models';
 @Component({
@@ -47,8 +49,12 @@ import {
 export class TransactionFormComponent implements OnInit, OnDestroy {
   readonly loading = input<boolean>(false);
   readonly type = input.required<TransactionType>();
-  readonly mode = input.required<'CREATE' | 'UPDATE' | 'VIEW'>();
-  readonly transactionCreated = output<CreateTransactionRequest>();
+  readonly mode = input.required<'CREATE' | 'VIEW'>();
+  readonly transaction = input<TransactionResponse>();
+  readonly readOnly = input.required<boolean>();
+
+  readonly submitted = output<CreateTransactionRequest>();
+  readonly canceled = output<void>();
 
   private readonly destroy$ = new Subject<void>();
 
@@ -70,11 +76,22 @@ export class TransactionFormComponent implements OnInit, OnDestroy {
     if (this.mode() === 'CREATE') {
       return 'Create Transaction';
     }
-    if (this.mode() === 'UPDATE') {
-      return 'Update Transaction';
-    }
-    return '';
+    return 'Update Transaction';
   });
+
+  constructor() {
+    effect(() => {
+      if (this.mode() === 'VIEW' && this.readOnly()) {
+        this.form.disable();
+      } else {
+        this.form.enable();
+      }
+    });
+
+    effect(() => {
+      this.initForm();
+    });
+  }
 
   get f() {
     return this.form.controls;
@@ -96,26 +113,41 @@ export class TransactionFormComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  onCancel() {
+    this.initForm();
+    this.canceled.emit();
+  }
+
   onSubmit() {
     this.form.markAllAsTouched();
     if (this.form.invalid) {
       return;
     }
-    console.log(this.form.value.description);
 
     const { amount, category, date, description, title } =
       this.form.getRawValue();
 
-    if (this.mode() === 'CREATE') {
-      this.transactionCreated.emit({
-        title,
-        amount,
-        date: format(date, 'yyyy-MM-dd'),
-        description: description ?? undefined, //Form control value is null if initial value is undefined even if using NonNullableFormBuilder. See https://github.com/angular/angular/issues/47027
-        type: this.type(),
-        category: category ?? undefined,
+    this.submitted.emit({
+      title,
+      amount,
+      date: format(date, 'yyyy-MM-dd'),
+      description: description ?? undefined, //Form control value is null if initial value is undefined even if using NonNullableFormBuilder. See https://github.com/angular/angular/issues/47027
+      type: this.type(),
+      category: category ?? undefined,
+    });
+    return;
+  }
+
+  private initForm() {
+    const transaction = this.transaction();
+    if (transaction) {
+      this.form.patchValue({
+        title: transaction.title,
+        description: transaction.description || undefined,
+        amount: transaction.amount,
+        date: new Date(transaction.date),
+        category: transaction.category || undefined,
       });
-      return;
     }
   }
 }
