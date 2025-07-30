@@ -24,8 +24,8 @@ export const routes: Routes = [
       {
         path: 'transactions',
         loadChildren: () =>
-          import('./transaction/transaction.routes').then(
-            m => m.TRANSACTION_ROUTES
+          import('./transactions/transactions.routes').then(
+            m => m.TRANSACTIONS_ROUTES
           ),
       },
     ],

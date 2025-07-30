@@ -1,0 +1,31 @@
+<form
+  class="flex flex-col gap-4 md:flex-row md:items-center"
+  [formGroup]="form">
+  <label hlmLabel for="from">
+    From
+    <hlm-date-picker
+      [class]="customClass"
+      formControlName="from"
+      id="from"
+      [autoCloseOnSelect]="true">
+      <span>Pick a date</span>
+    </hlm-date-picker>
+  </label>
+  <label hlmLabel for="to">
+    To
+    <hlm-date-picker
+      [class]="customClass"
+      formControlName="to"
+      id="to"
+      [autoCloseOnSelect]="true">
+      <span>Pick a date</span>
+    </hlm-date-picker>
+  </label>
+</form>
+@if (f.from.errors?.['required'] || f.to.errors?.['required']) {
+  <p class="mt-1 text-xs text-destructive">Date range is required</p>
+}
+
+@if (form.errors?.['dateRange']) {
+  <p class="mt-1 text-xs text-destructive">Invalid date range</p>
+}

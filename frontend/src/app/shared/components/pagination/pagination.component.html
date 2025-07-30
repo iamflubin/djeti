@@ -1,0 +1,30 @@
+<div class="flex items-center justify-between">
+  <nav hlmPagination>
+    <ul hlmPaginationContent>
+      @if (table().getCanPreviousPage()) {
+        <li hlmPaginationItem>
+          <hlm-pagination-previous (click)="onGoToPreviousPage()" />
+        </li>
+      }
+
+      @for (page of pages(); track page) {
+        <li hlmPaginationItem>
+          <a
+            tabindex="0"
+            hlmPaginationLink
+            [isActive]="page === pageIndex() + 1"
+            (keyup)="onGoToPage(page)"
+            (click)="onGoToPage(page)">
+            {{ page }}
+          </a>
+        </li>
+      }
+
+      @if (table().getCanNextPage()) {
+        <li hlmPaginationItem>
+          <hlm-pagination-next (click)="onGoToNextPage()" />
+        </li>
+      }
+    </ul>
+  </nav>
+</div>

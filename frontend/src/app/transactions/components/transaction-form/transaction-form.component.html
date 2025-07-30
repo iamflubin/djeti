@@ -1,0 +1,68 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-2">
+  <label hlmLabel>
+    Title
+    <input class="w-full" hlmInput type="text" formControlName="title" />
+    @if (f.title.errors?.['required'] && form.touched) {
+      <span class="text-xs text-destructive">Title is required</span>
+    }
+  </label>
+  <label hlmLabel>
+    Amount
+    <input class="w-full" hlmInput type="number" formControlName="amount" />
+    @if (f.amount.errors?.['required'] && form.touched) {
+      <span class="text-xs text-destructive">Amount is required</span>
+    }
+
+    @if (f.amount.errors?.['min'] && form.touched) {
+      <span class="text-xs text-destructive"
+        >Amount must be greater than 0</span
+      >
+    }
+  </label>
+  <label hlmLabel for="date">
+    Date
+    <hlm-date-picker
+      id="date"
+      formControlName="date"
+      class="my-1"
+      [autoCloseOnSelect]="true">
+      <span>Pick a date</span>
+    </hlm-date-picker>
+    @if (f.date.errors?.['required'] && form.touched) {
+      <span class="text-xs text-destructive">Date is required</span>
+    }
+  </label>
+  @if (type() === 'EXPENSE') {
+    <label hlmLabel for="category">
+      Category
+      <hlm-radio-group
+        formControlName="category"
+        class="my-1 flex justify-between">
+        <label class="flex items-center gap-1" hlmLabel for="needs">
+          <hlm-radio value="NEEDS" id="needs">
+            <hlm-radio-indicator indicator />
+          </hlm-radio>
+          Needs
+        </label>
+        <label class="flex items-center gap-1" hlmLabel for="wants">
+          <hlm-radio value="WANTS" id="wants">
+            <hlm-radio-indicator indicator />
+          </hlm-radio>
+          Wants
+        </label>
+        <label class="flex items-center gap-1" hlmLabel for="savings">
+          <hlm-radio value="SAVINGS" id="savings">
+            <hlm-radio-indicator indicator />
+          </hlm-radio>
+          Savings
+        </label>
+      </hlm-radio-group>
+      @if (f.category.errors?.['required'] && form.touched) {
+        <span class="text-xs text-destructive">Category is required</span>
+      }
+    </label>
+  }
+  <button hlmBtn [disabled]="loading()" class="mt-4">
+    {{ buttonLabel() }}
+  </button>
+</form>
