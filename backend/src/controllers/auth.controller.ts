@@ -46,7 +46,7 @@ export const logout = async (req: Request, res: Response) => {
     await authService.logout(refreshToken);
   }
 
-  res.clearCookie(env.REFRESH_TOKEN_COOKIE_NAME).sendStatus(204);
+  res.clearCookie(env.REFRESH_TOKEN_COOKIE_NAME, cookieOptions).sendStatus(204);
 };
 
 export const refreshToken = async (req: Request, res: Response) => {
