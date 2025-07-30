@@ -1,0 +1,6 @@
+<hlm-avatar>
+  <img [src]="src()" [alt]="alt()" hlmAvatarImage />
+  @if (displayFallback()) {
+    <span class="bg-destructive text-white" hlmAvatarFallback>RG</span>
+  }
+</hlm-avatar>

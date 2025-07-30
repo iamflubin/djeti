@@ -1,0 +1,44 @@
+<nav class="border-b py-4">
+  <div class="container mx-auto flex items-center">
+    <button
+      [brnMenuTriggerFor]="mobileMenu"
+      class="mr-4 md:hidden"
+      hlmBtn
+      variant="ghost"
+      size="icon"
+      class="mr-4 md:hidden">
+      <ng-icon hlm name="lucideMenu" />
+    </button>
+    <ng-template #mobileMenu>
+      <hlm-menu>
+        @for (item of navItems; track $index) {
+          <button hlmMenuItem [routerLink]="item.url">
+            {{ item.label }}
+          </button>
+        }
+      </hlm-menu>
+    </ng-template>
+    <div>Logo</div>
+    <ul class="ml-20 hidden items-center gap-8 md:flex">
+      @for (item of navItems; track $index) {
+        <li>
+          <a
+            [routerLink]="item.url"
+            routerLinkActive="text-primary"
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="underline-offset-2 hover:underline"
+            >{{ item.label }}</a
+          >
+        </li>
+      }
+    </ul>
+    <button [brnMenuTriggerFor]="userMenu" class="ml-auto">
+      <app-avatar fallback="RG" />
+    </button>
+    <ng-template #userMenu>
+      <hlm-menu>
+        <button hlmMenuItem (click)="onLogout()">Logout</button>
+      </hlm-menu>
+    </ng-template>
+  </div>
+</nav>

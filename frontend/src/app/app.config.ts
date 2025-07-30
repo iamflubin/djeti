@@ -9,7 +9,11 @@ import { provideRouter } from '@angular/router';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideIcons } from '@ng-icons/core';
-import { lucideArrowUpDown, lucideEllipsis } from '@ng-icons/lucide';
+import {
+  lucideArrowUpDown,
+  lucideEllipsis,
+  lucideMenu,
+} from '@ng-icons/lucide';
 import { catchError, firstValueFrom, of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthService } from './auth/services/auth.service';
@@ -31,6 +35,7 @@ export const appConfig: ApplicationConfig = {
     provideIcons({
       lucideArrowUpDown,
       lucideEllipsis,
+      lucideMenu,
     }),
   ],
 };

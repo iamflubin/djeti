@@ -58,11 +58,11 @@
       "@spartan-ng/helm/alert-dialog": [
         "./libs/ui/ui-alert-dialog-helm/src/index.ts"
       ],
-      "@spartan-ng/helm/avatar": [
-        "./libs/ui/ui-avatar-helm/src/index.ts"
-      ],
       "@spartan-ng/helm/pagination": [
         "./libs/ui/ui-pagination-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/avatar": [
+        "./libs/ui/ui-avatar-helm/src/index.ts"
       ]
     }
   },
