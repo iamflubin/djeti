@@ -74,11 +74,14 @@ export const readAllTransactions = async (
   type?: TransactionType
 ): Promise<PaginationResponse<TransactionResponse>> => {
   validatePageAndSize(page, size);
+  console.log({ from, to, type });
   const transactions = await prisma.transaction.findMany({
     where: {
       userId,
-      ...(from && { date: { gte: from } }),
-      ...(to && { date: { lte: to } }),
+      date: {
+        ...(from && { gte: from }),
+        ...(to && { lte: to }),
+      },
       ...(type && { type }),
     },
     orderBy: { date: 'desc' },
