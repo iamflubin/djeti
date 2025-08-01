@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { BrnMenuTriggerDirective } from '@spartan-ng/brain/menu';
 import { HlmMenuComponent, HlmMenuItemDirective } from '@spartan-ng/helm/menu';
@@ -26,6 +26,17 @@ import { AvatarComponent } from '../../../shared/components/avatar/avatar.compon
 export class HeaderComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+
+  protected readonly initials = computed(() => {
+    const user = this.authService.user();
+    return !user
+      ? ''
+      : user.fullName
+          .split(' ')
+          .filter(word => word.length > 0)
+          .map(word => word[0].toUpperCase())
+          .join('');
+  });
 
   protected readonly navItems = [
     { label: 'Dashboard', url: '/dashboard' },

@@ -63,6 +63,12 @@
       ],
       "@spartan-ng/helm/avatar": [
         "./libs/ui/ui-avatar-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/card": [
+        "./libs/ui/ui-card-helm/src/index.ts"
+      ],
+      "@spartan-ng/helm/progress": [
+        "./libs/ui/ui-progress-helm/src/index.ts"
       ]
     }
   },

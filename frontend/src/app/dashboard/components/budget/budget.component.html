@@ -1,0 +1,77 @@
+<div hlmCard>
+  <div hlmCardHeader>
+    <h3 hlmCardTitle>Budget</h3>
+  </div>
+  <div hlmCardContent class="flex flex-col gap-4">
+    <div>
+      <h4 class="font-bold">Needs</h4>
+      <app-budget-progress
+        [goal]="budget().needs.goal"
+        [spent]="budget().needs.spent" />
+      <div class="flex flex-col gap-2 text-sm">
+        <p>
+          Goal:
+          <span class="font-bold">{{ formatMoney(budget().needs.goal) }}</span>
+        </p>
+        <p>
+          Spent:
+          <span class="font-bold">{{ formatMoney(budget().needs.spent) }}</span>
+        </p>
+        <p>
+          Remaining:
+          <span class="font-bold">{{
+            formatMoney(budget().needs.remaining)
+          }}</span>
+        </p>
+      </div>
+    </div>
+    <div>
+      <h4 class="font-bold">Wants</h4>
+      <app-budget-progress
+        [goal]="budget().wants.goal"
+        [spent]="budget().wants.spent" />
+      <div class="flex flex-col gap-2 text-sm">
+        <p>
+          Goal:
+          <span class="font-bold">{{ formatMoney(budget().wants.goal) }}</span>
+        </p>
+        <p>
+          Spent:
+          <span class="font-bold">{{ formatMoney(budget().wants.spent) }}</span>
+        </p>
+        <p>
+          Remaining:
+          <span class="font-bold">{{
+            formatMoney(budget().wants.remaining)
+          }}</span>
+        </p>
+      </div>
+    </div>
+    <div>
+      <h4 class="font-bold">Savings</h4>
+      <app-budget-progress
+        [goal]="budget().savings.goal"
+        [spent]="budget().savings.spent" />
+      <div class="flex flex-col gap-2 text-sm">
+        <p>
+          Goal:
+          <span class="font-bold">{{
+            formatMoney(budget().savings.goal)
+          }}</span>
+        </p>
+        <p>
+          Spent:
+          <span class="font-bold">{{
+            formatMoney(budget().savings.spent)
+          }}</span>
+        </p>
+        <p>
+          Remaining:
+          <span class="font-bold">{{
+            formatMoney(budget().savings.remaining)
+          }}</span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -18,7 +18,7 @@
         }
       </hlm-menu>
     </ng-template>
-    <div>Logo</div>
+    <div class="text-2xl font-bold">BudgetApp</div>
     <ul class="ml-20 hidden items-center gap-8 md:flex">
       @for (item of navItems; track $index) {
         <li>
@@ -33,7 +33,7 @@
       }
     </ul>
     <button [brnMenuTriggerFor]="userMenu" class="ml-auto">
-      <app-avatar fallback="RG" />
+      <app-avatar [fallback]="initials()" />
     </button>
     <ng-template #userMenu>
       <hlm-menu>

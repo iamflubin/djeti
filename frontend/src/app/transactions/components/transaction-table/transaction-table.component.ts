@@ -1,11 +1,4 @@
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrnSelectModule } from '@spartan-ng/brain/select';
 import { HlmButtonModule } from '@spartan-ng/helm/button';
@@ -20,6 +13,7 @@ import {
   Updater,
 } from '@tanstack/angular-table';
 import { endOfMonth, startOfMonth } from 'date-fns';
+import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import {
   QueryParams,
@@ -27,7 +21,6 @@ import {
   TransactionType,
 } from '../../models';
 import { TransactionService } from '../../services/transaction.service';
-import { DateRangePickerComponent } from '../date-range-picker/date-range-picker.component';
 import { TRANSACTION_COLUMNS } from './columns';
 
 @Component({
@@ -45,7 +38,7 @@ import { TRANSACTION_COLUMNS } from './columns';
   templateUrl: './transaction-table.component.html',
   styleUrl: './transaction-table.component.scss',
 })
-export class TransactionTableComponent implements OnInit {
+export class TransactionTableComponent {
   private readonly defaultPageSize = 10;
   private readonly defaultPageIndex = 0;
 
@@ -90,10 +83,6 @@ export class TransactionTableComponent implements OnInit {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   }));
-
-  ngOnInit(): void {
-    this.fetchTransactions();
-  }
 
   private fetchTransactions() {
     const params: QueryParams = {

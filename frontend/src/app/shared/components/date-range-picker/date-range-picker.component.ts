@@ -13,8 +13,8 @@ import {
 } from '@angular/forms';
 import { HlmDatePickerComponent } from '@spartan-ng/helm/date-picker';
 import { endOfMonth, startOfMonth } from 'date-fns';
-import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { dateRangeValidator } from '../../validators/date-range.validator';
+import { debounceTime, startWith, Subject, takeUntil } from 'rxjs';
+import { dateRangeValidator } from './date-range.validator';
 
 @Component({
   selector: 'app-date-range-picker',
@@ -53,7 +53,11 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.form.valueChanges
-      .pipe(takeUntil(this.destroy$), debounceTime(200))
+      .pipe(
+        startWith(this.form.getRawValue()),
+        takeUntil(this.destroy$),
+        debounceTime(200)
+      )
       .subscribe(() => this.handleRangeChange());
   }
 

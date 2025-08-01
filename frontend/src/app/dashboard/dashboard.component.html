@@ -1,1 +1,24 @@
-<pre>{{ user() | json }}</pre>
+@if (user(); as user) {
+  <h1 class="text-3xl font-black">👋 Hi {{ user.fullName }}!</h1>
+}
+<p class="mb-4 text-sm text-muted-foreground">
+  See how your finances are doing this month
+</p>
+<div class="flex items-center md:justify-end">
+  <app-date-range-picker (rangeChange)="onRangeChange($event)" />
+</div>
+
+@if (loading()) {
+  <p>Loading...</p>
+} @else {
+  @if (dashboard(); as dashboard) {
+    <div class="mt-4 flex flex-col gap-12">
+      <app-summary [summary]="dashboard.summary" />
+      <div class="grid gap-4 md:grid-cols-2">
+        <app-budget [budget]="dashboard.budget" />
+        <app-expenses-pie-chart
+          [distribution]="dashboard.expensesDistribution" />
+      </div>
+    </div>
+  }
+}
