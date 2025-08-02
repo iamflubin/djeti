@@ -43,6 +43,14 @@ export class TransactionService {
     this.params.set(params);
   }
 
+  saveTransaction(request: UpdateTransactionRequest): Observable<void> {
+    this._loading.set(true);
+    return this.http.post<void>(`${this.baseUrl}`, request).pipe(
+      tap(() => this.getTransactions().subscribe()),
+      finalize(() => this._loading.set(false))
+    );
+  }
+
   getTransactions(): Observable<PaginatedResponse<TransactionResponse>> {
     this._loading.set(true);
     return this.http

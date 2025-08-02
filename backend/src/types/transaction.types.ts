@@ -32,7 +32,7 @@ export const CREATE_TRANSACTION_SCHEMA = z.object({
     .string()
     .date()
     .transform(val => new Date(val)),
-  category: z.enum(['NEEDS', 'WANTS', 'SAVINGS']).optional(),
+  category: z.enum(['NEEDS', 'WANTS', 'SAVINGS']).nullable(),
 });
 
 export type TransactionRequest = z.infer<typeof CREATE_TRANSACTION_SCHEMA>;

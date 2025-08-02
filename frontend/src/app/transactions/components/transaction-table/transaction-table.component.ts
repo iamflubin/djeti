@@ -2,6 +2,7 @@ import { Component, computed, inject, input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrnSelectModule } from '@spartan-ng/brain/select';
 import { HlmButtonModule } from '@spartan-ng/helm/button';
+import { HlmDialogService } from '@spartan-ng/helm/dialog';
 import { HlmSelectModule } from '@spartan-ng/helm/select';
 import { HlmTableImports } from '@spartan-ng/helm/table';
 import {
@@ -13,14 +14,17 @@ import {
   Updater,
 } from '@tanstack/angular-table';
 import { endOfMonth, startOfMonth } from 'date-fns';
+import { toast } from 'ngx-sonner';
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
 import {
+  CreateTransactionRequest,
   QueryParams,
   TransactionResponse,
   TransactionType,
 } from '../../models';
 import { TransactionService } from '../../services/transaction.service';
+import { CreateTransactionDialogComponent } from '../create-transaction-dialog/create-transaction-dialog.component';
 import { TRANSACTION_COLUMNS } from './columns';
 
 @Component({
@@ -45,6 +49,8 @@ export class TransactionTableComponent {
   readonly type = input.required<TransactionType>();
 
   private readonly transactionService = inject(TransactionService);
+  private readonly dialogService = inject(HlmDialogService);
+  private readonly toastService = toast;
 
   protected readonly loading = this.transactionService.loading;
   protected readonly totalElements = this.transactionService.totalElements;
@@ -84,6 +90,10 @@ export class TransactionTableComponent {
     getPaginationRowModel: getPaginationRowModel(),
   }));
 
+  protected readonly addBtnLabel = computed(() =>
+    this.type() === 'INCOME' ? 'Add Income' : 'Add Expense'
+  );
+
   private fetchTransactions() {
     const params: QueryParams = {
       page: this.pagination().pageIndex,
@@ -112,5 +122,26 @@ export class TransactionTableComponent {
       pageSize: this.defaultPageSize,
     });
     this.fetchTransactions();
+  }
+
+  onOpenAddDialog() {
+    const ref = this.dialogService.open(CreateTransactionDialogComponent, {
+      context: {
+        type: this.type(),
+        onCreate: (request: CreateTransactionRequest) => {
+          this.transactionService.saveTransaction(request).subscribe({
+            next: () => {
+              this.toastService.success('Transaction saved successfully');
+            },
+            error: () => {
+              this.toastService.error('Failed to save transaction');
+            },
+            complete: () => {
+              ref.close();
+            },
+          });
+        },
+      },
+    });
   }
 }

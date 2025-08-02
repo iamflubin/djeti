@@ -5,7 +5,7 @@ import {
   HlmDialogHeaderComponent,
   HlmDialogTitleDirective,
 } from '@spartan-ng/helm/dialog';
-import { CreateTransactionRequest, TransactionResponse } from '../../models';
+import { TransactionResponse, UpdateTransactionRequest } from '../../models';
 import { TransactionFormComponent } from '../transaction-form/transaction-form.component';
 
 @Component({
@@ -25,13 +25,13 @@ import { TransactionFormComponent } from '../transaction-form/transaction-form.c
 export class EditTransactionDialogComponent {
   private readonly dialogContext = injectBrnDialogContext<{
     transaction: TransactionResponse;
-    onEdit: (request: CreateTransactionRequest) => void;
+    onEdit: (request: UpdateTransactionRequest) => void;
   }>();
 
   protected readonly type = this.dialogContext.transaction.type;
   protected readonly transaction = this.dialogContext.transaction;
 
-  onEdit(request: CreateTransactionRequest) {
+  onEdit(request: UpdateTransactionRequest) {
     this.dialogContext.onEdit(request);
   }
 }
