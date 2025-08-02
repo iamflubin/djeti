@@ -8,10 +8,9 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build
-
 RUN npm run prisma:generate
 
+RUN npm run build
 
 # ---- Stage 2: Runtime ----
 FROM node:20-alpine
