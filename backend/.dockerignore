@@ -1,0 +1,29 @@
+# Node
+node_modules
+!node_modules/.prisma
+npm-debug.log
+pnpm-lock.yaml
+yarn.lock
+
+# Build outputs
+dist
+coverage
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git & config
+.git
+.gitignore
+
+# Environment
+.env
+.env.*  # all variants like .env.local
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

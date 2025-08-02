@@ -1,0 +1,33 @@
+# Node modules (you'll install fresh in the container)
+node_modules
+
+# Angular build outputs
+dist
+.angular
+coverage
+tmp
+.cache
+
+# Environment
+.env
+.env.*  # .env.local, .env.prod, etc.
+
+# Logs
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# IDEs / OS
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# Docker and Compose files themselves (optional)
+Dockerfile
+docker-compose.yml
+.dockerignore

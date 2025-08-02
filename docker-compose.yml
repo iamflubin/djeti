@@ -1,0 +1,50 @@
+services:
+  db:
+    image: postgres:17.5
+    container_name: djeti-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+    networks:
+      - djeti-network
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend
+    container_name: djeti-backend
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN_S: ${JWT_EXPIRES_IN_S}
+      REFRESH_TOKEN_EXPIRES_IN_MS: ${REFRESH_TOKEN_EXPIRES_IN_MS}
+      REFRESH_TOKEN_COOKIE_NAME: ${REFRESH_TOKEN_COOKIE_NAME}
+      CORS_ORIGINS: http://localhost,http://localhost:80
+      DATABASE_URL: postgres://${DB_USERNAME}:${DB_PASSWORD}@db:5432/${DB_NAME}?schema=public
+    depends_on:
+      - db
+    networks:
+      - djeti-network
+
+  frontend:
+    build: ./frontend
+    container_name: djeti-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - djeti-network
+
+volumes:
+  db:
+
+networks:
+  djeti-network:
+    driver: bridge
