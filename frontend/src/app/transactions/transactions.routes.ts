@@ -15,10 +15,12 @@ export const TRANSACTIONS_ROUTES: Routes = [
       },
       {
         path: 'incomes',
+        title: 'Incomes',
         component: IncomesPageComponent,
       },
       {
         path: 'expenses',
+        title: 'Expenses',
         component: ExpensesPageComponent,
       },
     ],

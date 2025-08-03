@@ -5,7 +5,7 @@ import {
   provideBrowserGlobalErrorListeners,
   provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { provideRouter, TitleStrategy } from '@angular/router';
 
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideIcons } from '@ng-icons/core';
@@ -19,6 +19,7 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 import { routes } from './app.routes';
 import { AuthService } from './auth/services/auth.service';
 import { authInterceptor } from './core/interceptor/auth.interceptor';
+import { CustomTitleStrategy } from './core/title.strategy';
 
 const refreshUser = (authService: AuthService) => {
   return firstValueFrom(
@@ -39,5 +40,6 @@ export const appConfig: ApplicationConfig = {
       lucideMenu,
     }),
     provideCharts(withDefaultRegisterables()),
+    { provide: TitleStrategy, useClass: CustomTitleStrategy },
   ],
 };
