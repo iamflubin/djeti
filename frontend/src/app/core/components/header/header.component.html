@@ -1,4 +1,4 @@
-<nav class="border-b py-4">
+<nav class="border-b">
   <div class="container mx-auto flex items-center">
     <button
       [brnMenuTriggerFor]="mobileMenu"
@@ -18,7 +18,9 @@
         }
       </hlm-menu>
     </ng-template>
-    <div class="text-2xl font-bold">BudgetApp</div>
+    <a routerLink="/">
+      <img src="img/logo.png" alt="" class="w-14" />
+    </a>
     <ul class="ml-20 hidden items-center gap-8 md:flex">
       @for (item of navItems; track $index) {
         <li>
