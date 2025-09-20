@@ -33,36 +33,6 @@ export class DashboardComponent implements OnDestroy {
     expensesDistribution: ExpensesDistribution;
   } | null>(null);
 
-  protected readonly summary = signal<Summary>({
-    totalIncome: 12035.86,
-    totalExpenses: 2092.9,
-    balance: 9942.96,
-  });
-
-  protected readonly budget = signal({
-    needs: {
-      goal: 6017.93, // 50% of 12035.86
-      spent: 3046.45,
-      remaining: 2971.48,
-    },
-    wants: {
-      goal: 3610.76, // 30%
-      spent: 627.87,
-      remaining: 2982.89,
-    },
-    savings: {
-      goal: 2407.17, // 20%
-      spent: 418.58,
-      remaining: 1988.59,
-    },
-  });
-
-  protected readonly expensesDistribution = signal({
-    needs: 3046.45,
-    wants: 627.87,
-    savings: 418.58,
-  });
-
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
