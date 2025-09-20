@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { injectBrnDialogContext } from '@spartan-ng/brain/dialog';
 import {
   HlmDialogDescriptionDirective,
@@ -16,11 +16,21 @@ import { TransactionFormComponent } from '../transaction-form/transaction-form.c
     HlmDialogDescriptionDirective,
     TransactionFormComponent,
   ],
-  templateUrl: './edit-transaction-dialog.component.html',
+  template: `
+    <hlm-dialog-header>
+      <h3 hlmDialogTitle>Edit transaction</h3>
+      <p hlmDialogDescription>Edit a transaction by filling out the form</p>
+    </hlm-dialog-header>
+    <app-transaction-form
+      [type]="type"
+      [transaction]="transaction"
+      (submitted)="onEdit($event)" />
+  `,
   styleUrl: './edit-transaction-dialog.component.scss',
   host: {
     class: 'flex flex-col gap-4',
   },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditTransactionDialogComponent {
   private readonly dialogContext = injectBrnDialogContext<{

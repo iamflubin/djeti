@@ -1,11 +1,14 @@
 import {
+  ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   inject,
   input,
   OnDestroy,
   OnInit,
   output,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
@@ -13,7 +16,7 @@ import {
 } from '@angular/forms';
 import { HlmDatePickerComponent } from '@spartan-ng/helm/date-picker';
 import { endOfMonth, startOfMonth } from 'date-fns';
-import { debounceTime, startWith, Subject, takeUntil } from 'rxjs';
+import { debounceTime, startWith, Subject } from 'rxjs';
 import { dateRangeValidator } from './date-range.validator';
 
 @Component({
@@ -21,6 +24,7 @@ import { dateRangeValidator } from './date-range.validator';
   imports: [HlmDatePickerComponent, ReactiveFormsModule],
   templateUrl: './date-range-picker.component.html',
   styleUrl: './date-range-picker.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangePickerComponent implements OnInit, OnDestroy {
   readonly initialFrom = input<Date>(startOfMonth(new Date()));
@@ -41,6 +45,8 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     }
   );
 
+  private readonly destroyRef = inject(DestroyRef);
+
   get f() {
     return this.form.controls;
   }
@@ -55,7 +61,7 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     this.form.valueChanges
       .pipe(
         startWith(this.form.getRawValue()),
-        takeUntil(this.destroy$),
+        takeUntilDestroyed(this.destroyRef),
         debounceTime(200)
       )
       .subscribe(() => this.handleRangeChange());

@@ -1,4 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import {
   HlmPaginationContentDirective,
   HlmPaginationDirective,
@@ -21,6 +26,7 @@ import { Table } from '@tanstack/angular-table';
   ],
   templateUrl: './pagination.component.html',
   styleUrl: './pagination.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginationComponent<T> {
   readonly table = input.required<Table<T>>();

@@ -1,4 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 
 import {
   BrnProgressComponent,
@@ -17,8 +22,13 @@ import {
     BrnProgressComponent,
     BrnProgressIndicatorComponent,
   ],
-  templateUrl: './budget-progress.component.html',
+  template: `
+    <brn-progress hlm [value]="value()">
+      <brn-progress-indicator hlm />
+    </brn-progress>
+  `,
   styleUrl: './budget-progress.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BudgetProgressComponent {
   readonly goal = input.required<number>();

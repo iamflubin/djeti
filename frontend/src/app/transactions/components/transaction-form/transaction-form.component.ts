@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   computed,
   effect,
@@ -44,6 +45,7 @@ import {
   ],
   templateUrl: './transaction-form.component.html',
   styleUrl: './transaction-form.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionFormComponent {
   readonly type = input.required<TransactionType>();

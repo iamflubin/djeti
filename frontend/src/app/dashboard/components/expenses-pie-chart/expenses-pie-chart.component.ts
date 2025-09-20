@@ -1,4 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { ChartData, ChartOptions } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
 import { formatMoney } from '../../../core/utils';
@@ -6,8 +11,20 @@ import { ExpensesDistribution } from '../../models';
 @Component({
   selector: 'app-expenses-pie-chart',
   imports: [BaseChartDirective],
-  templateUrl: './expenses-pie-chart.component.html',
+  template: `
+    <div style="position: relative; height: 300px">
+      <canvas
+        baseChart
+        [data]="pieChartData()"
+        [labels]="pieChartLabels"
+        [type]="pieChartType"
+        [options]="pieChartOptions"
+        [legend]="pieChartLegend">
+      </canvas>
+    </div>
+  `,
   styleUrl: './expenses-pie-chart.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpensesPieChartComponent {
   readonly distribution = input.required<ExpensesDistribution>();

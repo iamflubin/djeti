@@ -1,4 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import {
   HlmAvatarComponent,
   HlmAvatarFallbackDirective,
@@ -11,8 +16,16 @@ import {
     HlmAvatarImageDirective,
     HlmAvatarFallbackDirective,
   ],
-  templateUrl: './avatar.component.html',
+  template: ` <hlm-avatar>
+    <img [src]="src()" [alt]="alt()" hlmAvatarImage />
+    @if (displayFallback()) {
+      <span class="bg-primary text-primary-foreground" hlmAvatarFallback>
+        {{ fallback() }}
+      </span>
+    }
+  </hlm-avatar>`,
   styleUrl: './avatar.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AvatarComponent {
   readonly src = input<string>('');

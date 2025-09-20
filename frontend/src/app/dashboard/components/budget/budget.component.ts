@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import {
   HlmCardContentDirective,
   HlmCardDirective,
@@ -19,6 +19,7 @@ import { BudgetProgressComponent } from '../budget-progress/budget-progress.comp
   ],
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BudgetComponent {
   readonly budget = input.required<Budget>();

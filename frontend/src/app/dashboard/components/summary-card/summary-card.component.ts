@@ -1,4 +1,9 @@
-import { Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import {
   HlmCardContentDirective,
   HlmCardDirective,
@@ -14,8 +19,21 @@ import { formatMoney } from '../../../core/utils';
     HlmCardTitleDirective,
     HlmCardContentDirective,
   ],
-  templateUrl: './summary-card.component.html',
+  template: `
+    <div hlmCard>
+      <div hlmCardHeader>
+        <h3 hlmCardTitle>
+          {{ icon() }}
+          {{ title() }}
+        </h3>
+      </div>
+      <p hlmCardContent class="text-2xl font-bold">
+        {{ formattedAmount() }}
+      </p>
+    </div>
+  `,
   styleUrl: './summary-card.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SummaryCardComponent {
   readonly title = input.required<string>();

@@ -1,4 +1,10 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
@@ -23,6 +29,7 @@ import { AuthService } from '../../services/auth.service';
   ],
   templateUrl: './register-page.component.html',
   styleUrl: './register-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RegisterPageComponent {
   private readonly fb = inject(NonNullableFormBuilder);
@@ -30,13 +37,15 @@ export class RegisterPageComponent {
   private readonly router = inject(Router);
   private readonly toast = toast;
 
-  loading = this.authService.loading;
+  protected readonly loading = this.authService.loading;
 
-  form = this.fb.group({
+  protected readonly form = this.fb.group({
     fullName: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
   });
+
+  private readonly destroyRef = inject(DestroyRef);
 
   get f() {
     return this.form.controls;
@@ -47,14 +56,17 @@ export class RegisterPageComponent {
     if (this.form.invalid) {
       return;
     }
-    this.authService.register(this.form.getRawValue()).subscribe({
-      next: async () => {
-        await this.router.navigate(['auth', 'login']);
-        this.toast.success('Registered successfully. You can now log in');
-      },
-      error: error => {
-        this.toast.error(error.error.message);
-      },
-    });
+    this.authService
+      .register(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: async () => {
+          await this.router.navigate(['auth', 'login']);
+          this.toast.success('Registered successfully. You can now log in');
+        },
+        error: error => {
+          this.toast.error(error.error.message);
+        },
+      });
   }
 }

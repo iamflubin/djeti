@@ -1,4 +1,13 @@
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { BrnSelectModule } from '@spartan-ng/brain/select';
 import { HlmButtonModule } from '@spartan-ng/helm/button';
@@ -41,6 +50,7 @@ import { TRANSACTION_COLUMNS } from './columns';
   ],
   templateUrl: './transaction-table.component.html',
   styleUrl: './transaction-table.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TransactionTableComponent {
   private readonly defaultPageSize = 10;
@@ -94,6 +104,8 @@ export class TransactionTableComponent {
     this.type() === 'INCOME' ? 'Add Income' : 'Add Expense'
   );
 
+  private readonly destroyRef = inject(DestroyRef);
+
   private fetchTransactions() {
     const params: QueryParams = {
       page: this.pagination().pageIndex,
@@ -103,7 +115,10 @@ export class TransactionTableComponent {
       to: this.dateRange.to,
     };
     this.transactionService.setParams(params);
-    this.transactionService.getTransactions().subscribe();
+    this.transactionService
+      .getTransactions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   private handlePaginationChange(updaterOrValue: Updater<PaginationState>) {
@@ -129,17 +144,20 @@ export class TransactionTableComponent {
       context: {
         type: this.type(),
         onCreate: (request: CreateTransactionRequest) => {
-          this.transactionService.saveTransaction(request).subscribe({
-            next: () => {
-              this.toastService.success('Transaction saved successfully');
-            },
-            error: () => {
-              this.toastService.error('Failed to save transaction');
-            },
-            complete: () => {
-              ref.close();
-            },
-          });
+          this.transactionService
+            .saveTransaction(request)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+              next: () => {
+                this.toastService.success('Transaction saved successfully');
+              },
+              error: () => {
+                this.toastService.error('Failed to save transaction');
+              },
+              complete: () => {
+                ref.close();
+              },
+            });
         },
       },
     });

@@ -1,4 +1,10 @@
-import { Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  inject,
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
@@ -23,6 +29,7 @@ import { AuthService } from '../../services/auth.service';
   ],
   templateUrl: './login-page.component.html',
   styleUrl: './login-page.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
   private readonly fb = inject(NonNullableFormBuilder);
@@ -31,12 +38,14 @@ export class LoginPageComponent {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
-  loading = this.authService.loading;
+  protected readonly loading = this.authService.loading;
 
-  form = this.fb.group({
+  protected readonly form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   });
+
+  private readonly destroyRef = inject(DestroyRef);
 
   get f() {
     return this.form.controls;
@@ -48,15 +57,18 @@ export class LoginPageComponent {
       return;
     }
 
-    this.authService.login(this.form.getRawValue()).subscribe({
-      next: async () => {
-        await this.redirectUserOnLogin();
-        this.toast.success('Logged in successfully');
-      },
-      error: error => {
-        this.toast.error(error.error.message);
-      },
-    });
+    this.authService
+      .login(this.form.getRawValue())
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: async () => {
+          await this.redirectUserOnLogin();
+          this.toast.success('Logged in successfully');
+        },
+        error: error => {
+          this.toast.error(error.error.message);
+        },
+      });
   }
 
   private async redirectUserOnLogin() {

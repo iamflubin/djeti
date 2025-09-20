@@ -9,5 +9,14 @@
   "bracketSameLine": true,
   "printWidth": 80,
   "endOfLine": "auto",
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "overrides": [
+    {
+      "files": "*.html",
+      "options": {
+        "parser": "angular"
+      }
+    }
+  ],
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindFunctions": ["hlm", "cva"]
 }
