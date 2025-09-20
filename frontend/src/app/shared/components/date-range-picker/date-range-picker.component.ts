@@ -3,7 +3,6 @@ import {
   Component,
   DestroyRef,
   inject,
-  input,
   OnDestroy,
   OnInit,
   output,
@@ -17,6 +16,8 @@ import {
 import { HlmDatePickerComponent } from '@spartan-ng/helm/date-picker';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { debounceTime, startWith, Subject } from 'rxjs';
+import { DATE_RANGE_STORAGE_KEY } from '../../../core/constants/storage.constants';
+import { loadFromStorage, saveToStorage } from '../../../core/utils';
 import { dateRangeValidator } from './date-range.validator';
 
 @Component({
@@ -27,8 +28,6 @@ import { dateRangeValidator } from './date-range.validator';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangePickerComponent implements OnInit, OnDestroy {
-  readonly initialFrom = input<Date>(startOfMonth(new Date()));
-  readonly initialTo = input<Date>(endOfMonth(new Date()));
   readonly rangeChange = output<{ from: Date; to: Date }>();
 
   private readonly fb = inject(NonNullableFormBuilder);
@@ -37,8 +36,8 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
 
   protected readonly form = this.fb.group(
     {
-      from: [this.initialFrom(), Validators.required],
-      to: [this.initialTo(), Validators.required],
+      from: [new Date(), Validators.required],
+      to: [new Date(), Validators.required],
     },
     {
       validators: [dateRangeValidator('from', 'to')],
@@ -58,6 +57,7 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.initForm();
     this.form.valueChanges
       .pipe(
         startWith(this.form.getRawValue()),
@@ -72,10 +72,27 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  private initForm() {
+    const persistedRange = loadFromStorage<{ from: Date; to: Date }>(
+      DATE_RANGE_STORAGE_KEY
+    );
+
+    const now = new Date();
+    const initialFrom = persistedRange
+      ? new Date(persistedRange.from)
+      : startOfMonth(new Date());
+    const initialTo = persistedRange
+      ? new Date(persistedRange.to)
+      : endOfMonth(now);
+
+    this.form.patchValue({ from: initialFrom, to: initialTo });
+  }
+
   private handleRangeChange() {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     const { from, to } = this.form.getRawValue();
     this.rangeChange.emit({ from, to });
+    saveToStorage(DATE_RANGE_STORAGE_KEY, { from, to });
   }
 }
