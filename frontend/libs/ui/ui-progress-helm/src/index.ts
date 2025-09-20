@@ -6,10 +6,13 @@ import { HlmProgressDirective } from './lib/hlm-progress.directive';
 export * from './lib/hlm-progress-indicator.directive';
 export * from './lib/hlm-progress.directive';
 
-export const HlmProgressImports = [HlmProgressDirective, HlmProgressIndicatorDirective] as const;
+export const HlmProgressImports = [
+  HlmProgressDirective,
+  HlmProgressIndicatorDirective,
+] as const;
 
 @NgModule({
-	imports: [...HlmProgressImports],
-	exports: [...HlmProgressImports],
+  imports: [...HlmProgressImports],
+  exports: [...HlmProgressImports],
 })
 export class HlmProgressModule {}

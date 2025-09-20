@@ -7,10 +7,13 @@ export * from './lib/hlm-date-picker.token';
 export * from './lib/hlm-date-picker-multi.component';
 export * from './lib/hlm-date-picker.component';
 
-export const HlmDatePickerImports = [HlmDatePickerComponent, HlmDatePickerMultiComponent] as const;
+export const HlmDatePickerImports = [
+  HlmDatePickerComponent,
+  HlmDatePickerMultiComponent,
+] as const;
 
 @NgModule({
-	imports: [...HlmDatePickerImports],
-	exports: [...HlmDatePickerImports],
+  imports: [...HlmDatePickerImports],
+  exports: [...HlmDatePickerImports],
 })
 export class HlmDatePickerModule {}

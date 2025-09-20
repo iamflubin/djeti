@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { NgIcon, provideIcons } from '@ng-icons/core';
 import { lucideChevronRight } from '@ng-icons/lucide';
 import { hlm } from '@spartan-ng/brain/core';
@@ -6,18 +11,20 @@ import { HlmIconDirective } from '@spartan-ng/helm/icon';
 import type { ClassValue } from 'clsx';
 
 @Component({
-	selector: 'hlm-menu-item-sub-indicator',
-	providers: [provideIcons({ lucideChevronRight })],
-	imports: [NgIcon, HlmIconDirective],
-	template: `
-		<ng-icon hlm size="none" class="h-full w-full" name="lucideChevronRight" />
-	`,
-	host: {
-		'[class]': '_computedClass()',
-	},
-	changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'hlm-menu-item-sub-indicator',
+  providers: [provideIcons({ lucideChevronRight })],
+  imports: [NgIcon, HlmIconDirective],
+  template: `
+    <ng-icon hlm size="none" class="h-full w-full" name="lucideChevronRight" />
+  `,
+  host: {
+    '[class]': '_computedClass()',
+  },
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HlmMenuItemSubIndicatorComponent {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected _computedClass = computed(() => hlm('inline-block ml-auto h-4 w-4', this.userClass()));
+  public readonly userClass = input<ClassValue>('', { alias: 'class' });
+  protected _computedClass = computed(() =>
+    hlm('ml-auto inline-block h-4 w-4', this.userClass())
+  );
 }

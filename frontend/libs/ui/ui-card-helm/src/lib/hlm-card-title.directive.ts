@@ -3,12 +3,14 @@ import { hlm } from '@spartan-ng/brain/core';
 import type { ClassValue } from 'clsx';
 
 @Directive({
-	selector: '[hlmCardTitle]',
-	host: {
-		'[class]': '_computedClass()',
-	},
+  selector: '[hlmCardTitle]',
+  host: {
+    '[class]': '_computedClass()',
+  },
 })
 export class HlmCardTitleDirective {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected readonly _computedClass = computed(() => hlm('leading-none font-semibold', this.userClass()));
+  public readonly userClass = input<ClassValue>('', { alias: 'class' });
+  protected readonly _computedClass = computed(() =>
+    hlm('font-semibold leading-none', this.userClass())
+  );
 }

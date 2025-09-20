@@ -4,13 +4,15 @@ import { hlm } from '@spartan-ng/brain/core';
 import type { ClassValue } from 'clsx';
 
 @Directive({
-	selector: '[hlmAlertDialogTitle]',
-	host: {
-		'[class]': '_computedClass()',
-	},
-	hostDirectives: [BrnAlertDialogTitleDirective],
+  selector: '[hlmAlertDialogTitle]',
+  host: {
+    '[class]': '_computedClass()',
+  },
+  hostDirectives: [BrnAlertDialogTitleDirective],
 })
 export class HlmAlertDialogTitleDirective {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected readonly _computedClass = computed(() => hlm('text-lg font-semibold', this.userClass()));
+  public readonly userClass = input<ClassValue>('', { alias: 'class' });
+  protected readonly _computedClass = computed(() =>
+    hlm('text-lg font-semibold', this.userClass())
+  );
 }

@@ -4,13 +4,15 @@ import { BrnDialogDescriptionDirective } from '@spartan-ng/brain/dialog';
 import type { ClassValue } from 'clsx';
 
 @Directive({
-	selector: '[hlmDialogDescription]',
-	host: {
-		'[class]': '_computedClass()',
-	},
-	hostDirectives: [BrnDialogDescriptionDirective],
+  selector: '[hlmDialogDescription]',
+  host: {
+    '[class]': '_computedClass()',
+  },
+  hostDirectives: [BrnDialogDescriptionDirective],
 })
 export class HlmDialogDescriptionDirective {
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected _computedClass = computed(() => hlm('text-sm text-muted-foreground', this.userClass()));
+  public readonly userClass = input<ClassValue>('', { alias: 'class' });
+  protected _computedClass = computed(() =>
+    hlm('text-sm text-muted-foreground', this.userClass())
+  );
 }

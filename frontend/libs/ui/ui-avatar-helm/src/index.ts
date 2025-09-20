@@ -8,10 +8,14 @@ export * from './lib/fallback';
 export * from './lib/hlm-avatar.component';
 export * from './lib/image';
 
-export const HlmAvatarImports = [HlmAvatarFallbackDirective, HlmAvatarImageDirective, HlmAvatarComponent] as const;
+export const HlmAvatarImports = [
+  HlmAvatarFallbackDirective,
+  HlmAvatarImageDirective,
+  HlmAvatarComponent,
+] as const;
 
 @NgModule({
-	imports: [...HlmAvatarImports],
-	exports: [...HlmAvatarImports],
+  imports: [...HlmAvatarImports],
+  exports: [...HlmAvatarImports],
 })
 export class HlmAvatarModule {}

@@ -4,16 +4,18 @@ import { hlm } from '@spartan-ng/brain/core';
 import type { ClassValue } from 'clsx';
 
 @Directive({
-	selector: 'img[hlmAvatarImage]',
-	exportAs: 'avatarImage',
-	hostDirectives: [BrnAvatarImageDirective],
-	host: {
-		'[class]': '_computedClass()',
-	},
+  selector: 'img[hlmAvatarImage]',
+  exportAs: 'avatarImage',
+  hostDirectives: [BrnAvatarImageDirective],
+  host: {
+    '[class]': '_computedClass()',
+  },
 })
 export class HlmAvatarImageDirective {
-	public canShow = inject(BrnAvatarImageDirective).canShow;
+  public canShow = inject(BrnAvatarImageDirective).canShow;
 
-	public readonly userClass = input<ClassValue>('', { alias: 'class' });
-	protected _computedClass = computed(() => hlm('aspect-square size-full', this.userClass()));
+  public readonly userClass = input<ClassValue>('', { alias: 'class' });
+  protected _computedClass = computed(() =>
+    hlm('aspect-square size-full', this.userClass())
+  );
 }
