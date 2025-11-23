@@ -1,16 +1,21 @@
 import prisma from '@/lib/prisma';
-import { Budget, DashboardSummary, ExpensesDistribution } from '@/types';
+import {
+  Budget,
+  BudgetRule,
+  DashboardSummary,
+  ExpensesDistribution,
+} from '@/types';
 import { ExpenseCategory, Transaction } from '@prisma/client';
 
-const needsGoal = 0.5;
-const wantsGoal = 0.3;
-const savingsGoal = 0.2;
-
-const goals = {
-  NEEDS: (totalIncome: number) => totalIncome * needsGoal,
-  WANTS: (totalIncome: number) => totalIncome * wantsGoal,
-  SAVINGS: (totalIncome: number) => totalIncome * savingsGoal,
-} as const;
+const calculateGoals = (
+  needsGoal: number,
+  wantsGoal: number,
+  savingsGoal: number
+) => ({
+  needs: (totalIncome: number) => totalIncome * (needsGoal / 100),
+  wants: (totalIncome: number) => totalIncome * (wantsGoal / 100),
+  savings: (totalIncome: number) => totalIncome * (savingsGoal / 100),
+});
 
 const getTotal = (transactions: Transaction[]) => {
   return transactions.reduce((acc, curr) => acc + curr.amount.toNumber(), 0);
@@ -101,7 +106,8 @@ export const getExpensesDistribution = async (
 export const getBudget = async (
   userId: string,
   from: Date,
-  to: Date
+  to: Date,
+  rule: BudgetRule
 ): Promise<Budget> => {
   const incomes = await getIncomes(userId, from, to);
   const expenses = await getExpenses(userId, from, to);
@@ -116,21 +122,25 @@ export const getBudget = async (
   const totalWants = getTotal(wants);
   const totalSavings = getTotal(savings);
 
+  const { needs: needsRule, wants: wantsRule, savings: savingsRule } = rule;
+
+  const goals = calculateGoals(needsRule, wantsRule, savingsRule);
+
   return {
     needs: {
-      goal: goals.NEEDS(totalIncome),
+      goal: goals.needs(totalIncome),
       spent: totalNeeds,
-      remaining: goals.NEEDS(totalIncome) - totalNeeds,
+      remaining: goals.savings(totalIncome) - totalNeeds,
     },
     wants: {
-      goal: goals.WANTS(totalIncome),
+      goal: goals.wants(totalIncome),
       spent: totalWants,
-      remaining: goals.WANTS(totalIncome) - totalWants,
+      remaining: goals.wants(totalIncome) - totalWants,
     },
     savings: {
-      goal: goals.SAVINGS(totalIncome),
+      goal: goals.savings(totalIncome),
       spent: totalSavings,
-      remaining: goals.SAVINGS(totalIncome) - totalSavings,
+      remaining: goals.savings(totalIncome) - totalSavings,
     },
   };
 };

@@ -3,7 +3,7 @@ import { inject, Injectable, signal } from '@angular/core';
 import { format } from 'date-fns';
 import { finalize, forkJoin, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Budget, ExpensesDistribution, Summary } from '../models';
+import { Budget, BudgetRule, ExpensesDistribution, Summary } from '../models';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,10 @@ export class DashboardService {
 
   readonly loading = this._loading.asReadonly();
 
-  getDashboard(range: { from: Date; to: Date }): Observable<{
+  getDashboard(
+    range: { from: Date; to: Date },
+    rule: BudgetRule
+  ): Observable<{
     summary: Summary;
     budget: Budget;
     expensesDistribution: ExpensesDistribution;
@@ -23,7 +26,7 @@ export class DashboardService {
     this._loading.set(true);
     return forkJoin({
       summary: this.getSummary(range),
-      budget: this.getBudget(range),
+      budget: this.getBudget(range, rule),
       expensesDistribution: this.getExpensesDistribution(range),
     }).pipe(
       finalize(() => {
@@ -34,13 +37,19 @@ export class DashboardService {
 
   private getSummary(range: { from: Date; to: Date }): Observable<Summary> {
     return this.http.get<Summary>(`${this.baseUrl}/summary`, {
-      params: this.buildParams(range),
+      params: this.buildDateRangeParams(range),
     });
   }
 
-  private getBudget(range: { from: Date; to: Date }): Observable<Budget> {
+  private getBudget(
+    range: { from: Date; to: Date },
+    rule: BudgetRule
+  ): Observable<Budget> {
     return this.http.get<Budget>(`${this.baseUrl}/budget`, {
-      params: this.buildParams(range),
+      params: {
+        ...rule,
+        ...this.buildDateRangeParams(range),
+      },
     });
   }
 
@@ -51,12 +60,12 @@ export class DashboardService {
     return this.http.get<ExpensesDistribution>(
       `${this.baseUrl}/expenses-distribution`,
       {
-        params: this.buildParams(range),
+        params: this.buildDateRangeParams(range),
       }
     );
   }
 
-  private buildParams(range: { from: Date; to: Date }) {
+  private buildDateRangeParams(range: { from: Date; to: Date }) {
     return {
       from: format(range.from, 'yyyy-MM-dd'),
       to: format(range.to, 'yyyy-MM-dd'),

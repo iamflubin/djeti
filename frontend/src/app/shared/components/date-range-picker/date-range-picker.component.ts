@@ -3,6 +3,7 @@ import {
   Component,
   DestroyRef,
   inject,
+  input,
   OnDestroy,
   OnInit,
   output,
@@ -14,10 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { HlmDatePickerComponent } from '@spartan-ng/helm/date-picker';
-import { endOfMonth, startOfMonth } from 'date-fns';
-import { debounceTime, startWith, Subject } from 'rxjs';
-import { DATE_RANGE_STORAGE_KEY } from '../../../core/constants/storage.constants';
-import { loadFromStorage, saveToStorage } from '../../../core/utils';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { dateRangeValidator } from './date-range.validator';
 
 @Component({
@@ -28,6 +26,7 @@ import { dateRangeValidator } from './date-range.validator';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangePickerComponent implements OnInit, OnDestroy {
+  readonly initialRange = input<{ from: Date; to: Date }>();
   readonly rangeChange = output<{ from: Date; to: Date }>();
 
   private readonly fb = inject(NonNullableFormBuilder);
@@ -60,7 +59,7 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     this.initForm();
     this.form.valueChanges
       .pipe(
-        startWith(this.form.getRawValue()),
+        distinctUntilChanged(),
         takeUntilDestroyed(this.destroyRef),
         debounceTime(200)
       )
@@ -73,19 +72,13 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
   }
 
   private initForm() {
-    const persistedRange = loadFromStorage<{ from: Date; to: Date }>(
-      DATE_RANGE_STORAGE_KEY
-    );
-
-    const now = new Date();
-    const initialFrom = persistedRange
-      ? new Date(persistedRange.from)
-      : startOfMonth(new Date());
-    const initialTo = persistedRange
-      ? new Date(persistedRange.to)
-      : endOfMonth(now);
-
-    this.form.patchValue({ from: initialFrom, to: initialTo });
+    const initialRange = this.initialRange();
+    if (initialRange) {
+      this.form.patchValue({
+        from: initialRange.from,
+        to: initialRange.to,
+      });
+    }
   }
 
   private handleRangeChange() {
@@ -93,6 +86,5 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     if (this.form.invalid) return;
     const { from, to } = this.form.getRawValue();
     this.rangeChange.emit({ from, to });
-    saveToStorage(DATE_RANGE_STORAGE_KEY, { from, to });
   }
 }

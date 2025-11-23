@@ -1,7 +1,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export const dateRangeValidator =
-  (fromKey: string = 'from', toKey: string = 'to'): ValidatorFn =>
+  (fromKey = 'from', toKey = 'to'): ValidatorFn =>
   (group: AbstractControl): ValidationErrors | null => {
     const from = group.get(fromKey)?.value;
     const to = group.get(toKey)?.value;

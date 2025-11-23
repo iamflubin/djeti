@@ -4,8 +4,13 @@
 <p class="mb-4 text-sm text-muted-foreground">
   See how your finances are doing this month
 </p>
-<div class="flex items-center md:justify-end">
-  <app-date-range-picker (rangeChange)="onRangeChange($event)" />
+<div class="flex flex-col gap-2 md:items-end">
+  <app-date-range-picker
+    [initialRange]="initialRange()"
+    (rangeChange)="persitRange($event); refreshDahboard()" />
+  <app-budget-rule-selector
+    [initialRule]="initialRule()"
+    (ruleChange)="persistRule($event); refreshDahboard()" />
 </div>
 
 @if (loading()) {

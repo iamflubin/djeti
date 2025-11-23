@@ -21,3 +21,9 @@ export interface ExpensesDistribution {
   wants: number;
   savings: number;
 }
+
+export interface BudgetRule {
+  needs: number;
+  wants: number;
+  savings: number;
+}

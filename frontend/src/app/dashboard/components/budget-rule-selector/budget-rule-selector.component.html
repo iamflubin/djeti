@@ -1,0 +1,42 @@
+<div>
+  <form
+    [formGroup]="form"
+    class="flex flex-col gap-2 md:flex-row md:items-center">
+    <div>
+      <label hlmLabel for="needs"> Needs </label>
+      <input
+        hlmInput
+        id="needs"
+        type="number"
+        formControlName="needs"
+        class="w-full"
+        [class]="customClass" />
+    </div>
+    <div>
+      <label hlmLabel for="wants"> Wants </label>
+      <input
+        hlmInput
+        id="wants"
+        type="number"
+        class="w-full"
+        formControlName="wants"
+        [class]="customClass" />
+    </div>
+    <div>
+      <label hlmLabel for="savings"> Savings </label>
+      <input
+        hlmInput
+        id="savings"
+        type="number"
+        formControlName="savings"
+        class="w-full"
+        [class]="customClass" />
+    </div>
+  </form>
+
+  @if (form.hasError('invalidRule')) {
+    <p class="mt-1 text-xs text-destructive">
+      The sum of needs, wants, and savings must equal 100%
+    </p>
+  }
+</div>
