@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:17.5
-    container_name: djeti-db
     ports:
       - "5432:5432"
     environment:
@@ -11,11 +10,10 @@ services:
     networks:
       - djeti-network
     volumes:
-      - db:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
 
   backend:
     build: ./backend
-    container_name: djeti-backend
     ports:
       - "3000:3000"
     environment:
@@ -43,7 +41,7 @@ services:
       - djeti-network
 
 volumes:
-  db:
+  db-data:
 
 networks:
   djeti-network:
