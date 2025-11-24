@@ -130,7 +130,7 @@ export const getBudget = async (
     needs: {
       goal: goals.needs(totalIncome),
       spent: totalNeeds,
-      remaining: goals.savings(totalIncome) - totalNeeds,
+      remaining: goals.needs(totalIncome) - totalNeeds,
     },
     wants: {
       goal: goals.wants(totalIncome),
