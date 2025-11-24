@@ -23,6 +23,7 @@ import {
   HlmRadioIndicatorComponent,
 } from '@spartan-ng/helm/radio-group';
 import { format } from 'date-fns';
+import { DATE_FORMAT } from '../../../core/constants/date.constants';
 import {
   CreateTransactionRequest,
   ExpenseCategory,
@@ -109,7 +110,7 @@ export class TransactionFormComponent {
     this.submitted.emit({
       title,
       amount,
-      date: format(date, 'yyyy-MM-dd'),
+      date: format(date, DATE_FORMAT),
       type: this.type(),
       category: category,
     });

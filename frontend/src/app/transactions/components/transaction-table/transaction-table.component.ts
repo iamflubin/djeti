@@ -5,6 +5,7 @@ import {
   DestroyRef,
   inject,
   input,
+  OnInit,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -22,10 +23,12 @@ import {
   PaginationState,
   Updater,
 } from '@tanstack/angular-table';
-import { endOfMonth, startOfMonth } from 'date-fns';
+import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { toast } from 'ngx-sonner';
+import { DATE_FORMAT } from '../../../core/constants/date.constants';
 import { DateRangePickerComponent } from '../../../shared/components/date-range-picker/date-range-picker.component';
 import { PaginationComponent } from '../../../shared/components/pagination/pagination.component';
+import { DateRange } from '../../../shared/models';
 import {
   CreateTransactionRequest,
   QueryParams,
@@ -52,7 +55,7 @@ import { TRANSACTION_COLUMNS } from './columns';
   styleUrl: './transaction-table.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TransactionTableComponent {
+export class TransactionTableComponent implements OnInit {
   private readonly defaultPageSize = 10;
   private readonly defaultPageIndex = 0;
 
@@ -71,10 +74,15 @@ export class TransactionTableComponent {
     pageSize: this.defaultPageSize,
   });
 
-  private dateRange: { from: Date; to: Date } = {
-    from: startOfMonth(new Date()),
-    to: endOfMonth(new Date()),
-  };
+  protected readonly initialDateRange = signal<DateRange>({
+    from: format(startOfMonth(new Date()), DATE_FORMAT),
+    to: format(endOfMonth(new Date()), DATE_FORMAT),
+  });
+
+  protected readonly dateRange = signal<DateRange>({
+    from: format(startOfMonth(new Date()), DATE_FORMAT),
+    to: format(endOfMonth(new Date()), DATE_FORMAT),
+  });
 
   private readonly columns = computed(() => {
     if (this.type() === 'INCOME') {
@@ -106,13 +114,17 @@ export class TransactionTableComponent {
 
   private readonly destroyRef = inject(DestroyRef);
 
+  ngOnInit(): void {
+    this.fetchTransactions();
+  }
+
   private fetchTransactions() {
     const params: QueryParams = {
       page: this.pagination().pageIndex,
       size: this.pagination().pageSize,
       type: this.type(),
-      from: this.dateRange.from,
-      to: this.dateRange.to,
+      from: this.dateRange().from,
+      to: this.dateRange().to,
     };
     this.transactionService.setParams(params);
     this.transactionService
@@ -130,8 +142,8 @@ export class TransactionTableComponent {
     this.fetchTransactions();
   }
 
-  onRangeChange(range: { from: Date; to: Date }) {
-    this.dateRange = range;
+  onRangeChange(range: DateRange) {
+    this.dateRange.set(range);
     this.pagination.set({
       pageIndex: this.defaultPageIndex,
       pageSize: this.defaultPageSize,

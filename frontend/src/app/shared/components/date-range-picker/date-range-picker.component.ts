@@ -15,7 +15,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { HlmDatePickerComponent } from '@spartan-ng/helm/date-picker';
+import { format, parseISO } from 'date-fns';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import { DATE_FORMAT } from '../../../core/constants/date.constants';
 import { dateRangeValidator } from './date-range.validator';
 
 @Component({
@@ -26,8 +28,8 @@ import { dateRangeValidator } from './date-range.validator';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DateRangePickerComponent implements OnInit, OnDestroy {
-  readonly initialRange = input<{ from: Date; to: Date }>();
-  readonly rangeChange = output<{ from: Date; to: Date }>();
+  readonly initialRange = input<{ from: string; to: string }>();
+  readonly rangeChange = output<{ from: string; to: string }>();
 
   private readonly fb = inject(NonNullableFormBuilder);
 
@@ -75,8 +77,8 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     const initialRange = this.initialRange();
     if (initialRange) {
       this.form.patchValue({
-        from: initialRange.from,
-        to: initialRange.to,
+        from: parseISO(initialRange.from),
+        to: parseISO(initialRange.to),
       });
     }
   }
@@ -85,6 +87,9 @@ export class DateRangePickerComponent implements OnInit, OnDestroy {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     const { from, to } = this.form.getRawValue();
-    this.rangeChange.emit({ from, to });
+    this.rangeChange.emit({
+      from: format(from, DATE_FORMAT),
+      to: format(to, DATE_FORMAT),
+    });
   }
 }

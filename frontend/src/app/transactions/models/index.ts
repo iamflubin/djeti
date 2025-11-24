@@ -21,7 +21,7 @@ export interface TransactionResponse {
   id: string;
   title: string;
   amount: number;
-  date: Date;
+  date: string;
   description: string | null;
   type: TransactionType;
   category: ExpenseCategory | null;
@@ -40,6 +40,6 @@ export interface QueryParams {
   page: number;
   size: number;
   type: TransactionType;
-  from: Date;
-  to: Date;
+  from: string;
+  to: string;
 }

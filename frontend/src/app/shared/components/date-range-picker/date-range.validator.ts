@@ -1,4 +1,5 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { isAfter } from 'date-fns';
 
 export const dateRangeValidator =
   (fromKey = 'from', toKey = 'to'): ValidatorFn =>
@@ -8,13 +9,10 @@ export const dateRangeValidator =
 
     if (!from || !to) return null;
 
-    const fromDate = new Date(from);
-    const toDate = new Date(to);
-
-    if (isNaN(fromDate.getTime()) || isNaN(toDate.getTime()))
+    if (isNaN(from.getTime()) || isNaN(to.getTime()))
       return { dateRange: 'Invalid date format' };
 
-    return fromDate <= toDate
-      ? null
-      : { dateRange: 'Start date must be before end date' };
+    return isAfter(from, to)
+      ? { dateRange: 'Start date must be before end date' }
+      : null;
   };

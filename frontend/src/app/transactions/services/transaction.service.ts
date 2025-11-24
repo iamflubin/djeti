@@ -3,6 +3,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { finalize, Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DATE_FORMAT } from '../../core/constants/date.constants';
 import {
   PaginatedResponse,
   QueryParams,
@@ -23,15 +24,15 @@ export class TransactionService {
   private readonly params = signal<QueryParams>({
     page: 0,
     size: 10,
-    from: startOfMonth(new Date()),
-    to: endOfMonth(new Date()),
+    from: format(startOfMonth(new Date()), DATE_FORMAT),
+    to: format(endOfMonth(new Date()), DATE_FORMAT),
     type: 'INCOME',
   });
   private readonly queryParams = computed(() => ({
     page: this.params().page,
     size: this.params().size,
-    from: format(this.params().from, 'yyyy-MM-dd'),
-    to: format(this.params().to, 'yyyy-MM-dd'),
+    from: format(this.params().from, DATE_FORMAT),
+    to: format(this.params().to, DATE_FORMAT),
     type: this.params().type,
   }));
   readonly transactions = this._transactions.asReadonly();

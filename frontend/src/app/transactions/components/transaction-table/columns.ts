@@ -1,4 +1,5 @@
 import { ColumnDef, flexRenderComponent } from '@tanstack/angular-table';
+import { parseISO } from 'date-fns';
 import { formatDate, formatMoney } from '../../../core/utils';
 import { TransactionResponse } from '../../models';
 import { TransactionTableActionsComponent } from '../transaction-table-actions/transaction-table-actions.component';
@@ -19,7 +20,7 @@ export const TRANSACTION_COLUMNS: ColumnDef<TransactionResponse>[] = [
     id: 'date',
     accessorKey: 'date',
     header: 'Date',
-    cell: ({ row }) => formatDate(new Date(row.original.date)),
+    cell: ({ row }) => formatDate(parseISO(row.original.date)),
   },
   {
     id: 'category',

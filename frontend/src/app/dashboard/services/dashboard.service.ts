@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
-import { format } from 'date-fns';
 import { finalize, forkJoin, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { DateRange } from '../../shared/models';
 import { Budget, BudgetRule, ExpensesDistribution, Summary } from '../models';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class DashboardService {
   readonly loading = this._loading.asReadonly();
 
   getDashboard(
-    range: { from: Date; to: Date },
+    range: DateRange,
     rule: BudgetRule
   ): Observable<{
     summary: Summary;
@@ -35,16 +35,13 @@ export class DashboardService {
     );
   }
 
-  private getSummary(range: { from: Date; to: Date }): Observable<Summary> {
+  private getSummary(range: DateRange): Observable<Summary> {
     return this.http.get<Summary>(`${this.baseUrl}/summary`, {
       params: this.buildDateRangeParams(range),
     });
   }
 
-  private getBudget(
-    range: { from: Date; to: Date },
-    rule: BudgetRule
-  ): Observable<Budget> {
+  private getBudget(range: DateRange, rule: BudgetRule): Observable<Budget> {
     return this.http.get<Budget>(`${this.baseUrl}/budget`, {
       params: {
         ...rule,
@@ -53,10 +50,9 @@ export class DashboardService {
     });
   }
 
-  private getExpensesDistribution(range: {
-    from: Date;
-    to: Date;
-  }): Observable<ExpensesDistribution> {
+  private getExpensesDistribution(
+    range: DateRange
+  ): Observable<ExpensesDistribution> {
     return this.http.get<ExpensesDistribution>(
       `${this.baseUrl}/expenses-distribution`,
       {
@@ -65,10 +61,10 @@ export class DashboardService {
     );
   }
 
-  private buildDateRangeParams(range: { from: Date; to: Date }) {
+  private buildDateRangeParams({ from, to }: DateRange) {
     return {
-      from: format(range.from, 'yyyy-MM-dd'),
-      to: format(range.to, 'yyyy-MM-dd'),
+      from,
+      to,
     };
   }
 }

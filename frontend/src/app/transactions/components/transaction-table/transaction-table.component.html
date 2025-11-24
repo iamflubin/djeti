@@ -1,7 +1,9 @@
 <button hlmBtn (click)="onOpenAddDialog()">{{ addBtnLabel() }}</button>
 
 <div class="mt-2 flex items-center justify-end">
-  <app-date-range-picker (rangeChange)="onRangeChange($event)" />
+  <app-date-range-picker
+    [initialRange]="initialDateRange()"
+    (rangeChange)="onRangeChange($event)" />
 </div>
 
 @if (!loading()) {
